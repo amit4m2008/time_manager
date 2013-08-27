@@ -1,0 +1,38 @@
+<div id="content_wrapper">
+  <div id="content">
+    <img class="scrollButtons left" src="" alt=""/>
+    <div class="scroll" style="overflow: hidden;">
+      <div class="scrollContainer" style="width: 4300px;">
+        <div class="panel" id="home" style="float: left; position: relative;">
+          <div class="col_800 float_l">
+            <h1 style="text-align: center"> Welcome Admin </h1>
+            <br/>
+            <h1> List of users </h1>
+            <table class="simple_table" >
+              <tr>
+                <th>User email address</th>
+                <th>Status</th>
+                <th>Delete</th>
+              </tr>
+              <% @total_users.each do |user| %>
+                <tr>
+                  <td><%= user.email %></td>
+
+                  <% if user.approved_by_admin %>
+                    <td><%= link_to "‎Reject", reject_user_admin_path(id: user.id), style: "color: #000" %></td>
+                  <% else %>
+                    <td><%= link_to "‎Approve", approve_user_admin_path(id: user.id), style: "color: #000" %></td>
+                  <% end %>
+                  <td>
+                    <%= link_to 'Remove User', destroy_user_admin_path(id: user.id), style: "color: #000", confirm: 'Are You Sure Want To Remove The User ?', method: :delete %>
+                  </td>
+                </tr>
+              <% end %>
+            </table>
+          </div>
+          <div class="cleaner_h20"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

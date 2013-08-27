@@ -1,0 +1,145 @@
+<% require 'date' %>
+<% require 'time_diff' %>
+
+<% first_index = @previous_time_records.keys.first.to_s %>
+<% last_index = @previous_time_records.keys.last.to_s %>
+<% #raise last_index.to_i.inspect %>
+<% i = first_index.to_i %>
+
+<ul id="navbar">
+  <%= link_to("Click here to view current month timings", time_records_path) %>
+</ul>
+
+<table style="width: 100%; text-align: center;" class="simple_table1">
+  <tr>
+    <th>Date</th>
+    <th>In Time</th>
+    <th>Out Time</th>
+    <th>Attended Hours</th>
+    <th>Total Hours</th>
+  </tr>
+  <% #raise @time_records.inspect %>
+  <% unless  @previous_time_records.blank? %>
+    <% while i <= last_index.to_i %>
+      <% if @previous_time_records["#{i}"]["in_time"].blank? || @previous_time_records["#{i}"]["out_time"].blank? %>
+        <% i += 1 %>
+        <%  if i > last_index.to_i %>
+          <% break %>
+        <% end %>
+      <% else %>
+        <tr>
+          <td><%= @previous_time_records["#{i}"]['date'] %></td>
+          <td><%= @previous_time_records["#{i}"]["in_time"] %></td>
+          <td><%= @previous_time_records["#{i}"]["out_time"] %></td>
+          <td><%= @previous_time_records["#{i}"]["attended_hours"] %></td>
+          <td><%= @previous_time_records["#{i}"]["total_hours"] %></td>
+        </tr>
+        <% i += 1 %>
+      <% end %>
+
+    <% end %>
+  <% end %>
+</table>
+
+<% i = first_index.to_i %>
+<% j = first_index.to_i %>
+
+<div class="cleaner_h10"></div>
+<% unless  @previous_time_records.blank? %>
+  <% attended_seconds = 0 %>
+  <% total_seconds = 0 %>
+
+  <% while i <= last_index.to_i %>
+    <% if @previous_time_records["#{i}"]["attended_hours"].blank? %>
+      <% i += 1 %>
+      <%  if i > last_index.to_i %>
+        <% break %>
+      <% end %>
+    <%  else %>
+      <% attended_date_time = DateTime.parse(@previous_time_records["#{i}"]["attended_hours"]) %>
+      <% total_date_time = DateTime.parse(@previous_time_records["#{i}"]["total_hours"]) %>
+
+      <% a_seconds = attended_date_time.hour * 3600 + attended_date_time.min * 60 %>
+      <% t_seconds = total_date_time.hour * 3600 + total_date_time.min * 60 %>
+
+      <%  attended_seconds += a_seconds %>
+      <%  total_seconds += t_seconds %>
+      <% i += 1 %>
+    <% end %>
+  <% end %>
+
+  <% i = first_index.to_i %>
+
+  <% attended_hours = attended_seconds / 3600.to_i %>
+  <% attended_minutes = (attended_seconds / 60 - attended_hours * 60).to_s %>
+
+  <% if attended_minutes.to_i < 10 %>
+    <% total_attended_time = "#{attended_hours} : 0#{attended_minutes.to_s}" %>
+  <% else %>
+    <% total_attended_time = "#{attended_hours} : #{attended_minutes}" %>
+  <% end %>
+
+
+
+  <% total_hours = total_seconds / 3600.to_i %>
+  <% total_minutes = (total_seconds / 60 - total_hours * 60).to_i %>
+  <% total_time = "#{total_hours} : #{total_minutes}" %>
+
+  <% if total_hours < 10 && total_minutes < 10 %>
+    <% total_time = "0#{total_hours} : 0#{total_minutes}" %>
+  <% elsif total_minutes < 10 %>
+    <% total_time = "#{total_hours} : 0#{total_minutes}" %>
+  <% elsif total_hours < 10 %>
+    <% total_time = "0#{total_hours} : #{total_minutes}" %>
+  <% else %>
+    <% total_time = "#{total_hours} : #{total_minutes}" %>
+  <% end %>
+
+  <% if total_seconds < attended_seconds %>
+    <% default_by_seconds = attended_seconds - total_seconds %>
+    <% default_by_hours = default_by_seconds / 3600.to_i %>
+    <% default_by_minutes = (default_by_seconds / 60 - default_by_hours * 60).to_i %>
+
+    <% if default_by_minutes < 10 && default_by_hours < 10 %>
+      <% default_by_total_time = "+ 0#{default_by_hours} : 0#{default_by_minutes}" %>
+    <% elsif default_by_hours < 10 %>
+      <% default_by_total_time = "+ 0#{default_by_hours} : #{default_by_minutes}" %>
+    <% elsif default_by_minutes < 10 %>
+      <% default_by_total_time = "+ #{default_by_hours} : 0#{default_by_minutes}" %>
+    <% else %>
+      <% default_by_total_time = "+ #{default_by_hours} : #{default_by_minutes}" %>
+    <% end %>
+
+  <% else %>
+    <% default_by_seconds = total_seconds - attended_seconds %>
+    <% default_by_hours = default_by_seconds / 3600.to_i %>
+    <% default_by_minutes = (default_by_seconds / 60 - default_by_hours * 60).to_i %>
+    <% if default_by_seconds == 0 %>
+      <% default_by_total_time = "0#{default_by_hours} : 0#{default_by_minutes}" %>
+    <% else %>
+      <% default_by_total_time = "- #{default_by_hours} : #{default_by_minutes}" %>
+    <% end %>
+
+  <% end %>
+
+  <% #default_by_total_time = Time.diff(Time.parse(total_time), Time.parse(total_attended_time), "%h:%m") %>
+
+  <div class="cleaner"></div>
+  <%=   %>
+  <div class="cleaner"></div>
+  <div class="attended_hours">
+    <span>Attended hours</span><br/>
+    <span><%= total_attended_time %></span>
+  </div>
+
+  <div class="attended_hours">
+    <span>Total hours</span><br/>
+    <span><%= total_time %></span>
+  </div>
+
+  <div class="attended_hours">
+    <span>Default by</span><br/>
+    <span><%= default_by_total_time %></span>
+  </div>
+
+<% end %>

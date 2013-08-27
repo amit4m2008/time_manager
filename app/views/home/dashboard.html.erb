@@ -1,0 +1,20 @@
+<div id="content_wrapper">
+  <div id="content">
+    <img class="scrollButtons left" src="" alt=""/>
+    <div class="scroll" style="overflow: hidden;">
+      <div class="scrollContainer" style="width: 4300px;">
+        <div class="panel" id="home" style="float: left; position: relative;">
+          <div class="col_550 float_l">
+            <% if @user.admin %>
+              <h1>Welcome Admin</h1>
+            <% else %>
+              <h2>Click here to view your <%= link_to "timesheet", user_root_path %></h2>
+            <% end %>
+          </div>
+          <div class="cleaner_h20"></div>
+          <div class="cleaner_h200"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

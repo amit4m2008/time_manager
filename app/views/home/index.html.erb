@@ -1,0 +1,125 @@
+<style type="text/css">
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  .clock_div {
+    position: relative;
+    width: 350px;
+    height: 350px;
+    margin: 0px auto 0 auto;
+    background: url(assets/new_design/templatemo_menu_bg3.png);
+    list-style: none;
+  }
+
+  #clock {
+    position: relative;
+    width: 325px;
+    height: 240px;
+    margin: -245px auto 0 auto;
+    background: url(assets/clock/clock.png) center no-repeat;
+    list-style: none;
+<%#*border: 2px solid #000;%>
+  }
+
+  #sec, #min, #hour {
+    position: absolute;
+    width: 30px;
+    height: 240px;
+    top: 0px;
+    left: 153px;
+  }
+
+  #sec {
+    background: url(assets/clock/sechand.png) center no-repeat;
+    z-index: 3;
+  }
+
+  #min {
+    background: url(assets/clock/minhand.png) center no-repeat;
+    z-index: 2;
+  }
+
+  #hour {
+    background: url(assets/clock/hourhand.png) center no-repeat;
+    z-index: 1;
+  }
+
+  p {
+    text-align: center;
+    padding: 10px 0 0 0;
+  }
+</style>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+
+    setInterval( function() {
+      var seconds = new Date().getSeconds();
+      var sdegree = seconds * 6;
+      var srotate = "rotate(" + sdegree + "deg)";
+
+      $("#sec").css({"-moz-transform" : srotate, "-webkit-transform" : srotate});
+
+    }, 1000 );
+
+
+    setInterval( function() {
+      var hours = new Date().getHours();
+      var mins = new Date().getMinutes();
+      var hdegree = hours * 30 + (mins / 2);
+      var hrotate = "rotate(" + hdegree + "deg)";
+
+      $("#hour").css({"-moz-transform" : hrotate, "-webkit-transform" : hrotate});
+
+    }, 1000 );
+
+
+    setInterval( function() {
+      var mins = new Date().getMinutes();
+      var mdegree = mins * 6;
+      var mrotate = "rotate(" + mdegree + "deg)";
+
+      $("#min").css({"-moz-transform" : mrotate, "-webkit-transform" : mrotate});
+
+    }, 1000 );
+
+  });
+
+</script>
+
+<div id="content_wrapper">
+  <div id="content">
+    <img class="scrollButtons left" src="" alt=""/>
+    <div class="scroll" style="overflow: hidden;">
+      <div class="scrollContainer" style="width: 4300px;">
+        <div class="panel" id="home" style="float: left; position: relative;">
+          <div class="col_400 float_l">
+            <div class="cleaner_h100"></div>
+            <h1>Time Manager</h1>
+            <em style="font-size: 20px; text-decoration: none">Introducing a new way to manage office timings </em>
+            <br/>
+            <br/>
+            <em style="font-size: 15px;">
+              Time Manager is simple to use and eassy to maintain a record of your office timings.
+              Time manager website is an free service.<br/>
+              Please read the instructions page before using the website.
+            </em>
+          </div>
+          <div class="col_400 float_r" >
+            <div class="clock_div">
+            </div>
+            <ul id="clock" >
+              <li id="sec"></li>
+              <li id="hour"></li>
+              <li id="min"></li>
+            </ul>
+          </div>
+          <div class="cleaner_h20"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

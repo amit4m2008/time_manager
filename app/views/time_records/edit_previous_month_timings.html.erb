@@ -1,0 +1,51 @@
+<% require 'date' %>
+<% require 'time_diff' %>
+
+<div id="content_wrapper1">
+  <div id="content1">
+    <img class="scrollButtons left" src="" alt=""/>
+    <div class="scroll" style="overflow: hidden;">
+      <div class="scrollContainer" style="width: 4300px;">
+        <div class="panel" id="home" style="float: left; position: relative;">
+          <div id="contact_form">
+
+            <% first_index = @previous_time_records.keys.first.to_s %>
+            <% last_index = @previous_time_records.keys.last.to_s %>
+            <% fd = @previous_time_records[first_index]["date"].to_date %>
+            <% ld = @previous_time_records[first_index]["date"].to_date + 30 %>
+            <% i = 1 %>
+            <%  #raise (fd).inspect %>
+            <%= form_tag update_previous_month_timings_time_records_path, method: 'post' do |f| %>
+
+              <table style="width: 100%; text-align: center" >
+                <tr>
+                  <th style="font-size: 20px;">Date</th>
+                  <th style="font-size: 20px;">In Time</th>
+                  <th style="font-size: 20px;">Out Time</th>
+                </tr>
+                <% (fd..ld).each do |date| %>
+                  <% unless DateTime.parse("#{date}").strftime("%A") == "Saturday" || DateTime.parse("#{date}").strftime("%A") == "Sunday" %>
+                    <tr>
+                      <td>
+                        <div class="input_field"> <%= date.strftime("%Y-%m-%d") %> </div>
+                        <%= hidden_field_tag "time_record[previous_month_timing][#{i}][date]", date.strftime("%Y-%m-%d") %>
+                      </td>
+                      <td><%= text_field_tag "time_record[previous_month_timing][#{i}][in_time]", @previous_time_records["#{i}"]["in_time"].blank? ? nil : @previous_time_records["#{i}"]["in_time"], :class => "input_field" %></td>
+                      <td><%= text_field_tag "time_record[previous_month_timing][#{i}][out_time]", @previous_time_records["#{i}"]["out_time"].blank? ? nil : @previous_time_records["#{i}"]["out_time"], :class => "input_field" %></td>
+                    </tr>
+                    <% i += 1 %>
+                  <% end %>
+                <% end %>
+              </table>
+              <% i = 1 %>
+
+              <div class="cleaner_h10"></div>
+              <%= link_to "Cancel", time_records_path(previous: true), class: "cancel_button float_r" %>
+                <%= submit_tag "Save", class: "save_button float_r" %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

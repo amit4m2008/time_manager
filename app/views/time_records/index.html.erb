@@ -1,0 +1,46 @@
+<% require 'date' %>
+<% require 'time_diff' %>
+
+<div id="content_wrapper1">
+  <div id="content1">
+    <img class="scrollButtons left" src="" alt=""/>
+    <div class="scroll" style="overflow: hidden;">
+      <% unless @current_time_records.blank?%>
+        <div class="link_button">
+          <% if params[:previous] %>
+            <%= link_to "Edit", edit_previous_month_timings_time_records_path %>
+          <% else %>
+            <%= link_to "Edit", edit_multiple_time_records_path %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="scrollContainer" style="width: 4300px;">
+        <div class="panel" id="home" style="float: left; position: relative;">
+
+          <% if @current_time_records.blank? %>
+            <h2 style="text-align: center">No record found !</h2>
+            <h3 style="text-align: center">Click <%= link_to 'here', new_time_record_path %> to create new timesheet</h3>
+          <% else %>
+
+            <% if params[:previous] %>
+              <% f_index = @previous_time_records.keys.first.to_s %>
+              <% f_month = @previous_time_records[f_index]["date"].to_date %>
+              <% e_month = @previous_time_records[f_index]["date"].to_date + 30 %>
+              <h1 style="text-align: left">Timings for the month of <%= f_month.strftime("%B")%> - <%=  e_month.strftime("%B") %></h1>
+              <%= render "previous_month" %>
+            <% else %>
+              <% f_index = @current_time_records.keys.first.to_s %>
+              <% f_month = @current_time_records[f_index]["date"].to_date %>
+              <% e_month = @current_time_records[f_index]["date"].to_date + 30 %>
+              <h1 style="text-align: left">Timings for the month of <%= f_month.strftime("%B")%> - <%=  e_month.strftime("%B") %></h1>
+              <%= render "current_month" %>
+            <% end %>
+
+          <% end %>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
